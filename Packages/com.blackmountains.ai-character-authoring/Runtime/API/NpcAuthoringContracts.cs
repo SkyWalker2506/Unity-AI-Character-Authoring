@@ -7,7 +7,8 @@ namespace BlackMountains.AICharacterAuthoring
     {
         Vendor,
         Bandit,
-        Companion
+        Companion,
+        Wildlife
     }
 
     public enum NpcIntegrationMode

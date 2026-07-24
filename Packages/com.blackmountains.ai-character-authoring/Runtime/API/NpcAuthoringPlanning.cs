@@ -550,6 +550,23 @@ namespace BlackMountains.AICharacterAuthoring
                     if (definition.Companion == null)
                         Error(result, "ACA-NPC-COMPANION-PROFILE", "Companion record is required.", definition.StableId);
                     break;
+                case NpcRole.Wildlife:
+                    RequireCapability(
+                        capabilities,
+                        NpcCapabilityIds.Visual,
+                        definition,
+                        result);
+                    RequireCapability(
+                        capabilities,
+                        NpcCapabilityIds.Animator,
+                        definition,
+                        result);
+                    RequireCapability(
+                        capabilities,
+                        NpcCapabilityIds.Wander,
+                        definition,
+                        result);
+                    break;
             }
         }
 

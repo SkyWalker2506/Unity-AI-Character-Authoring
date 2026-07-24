@@ -463,6 +463,34 @@ namespace BlackMountains.AICharacterAuthoring
                     "Humanoid avatar requirement does not match the archetype.",
                     profile.ProfileId));
             }
+            if (!humanoid &&
+                definition.CharacterSource != null)
+            {
+                if (!string.Equals(
+                        profile.SourceProviderId,
+                        definition.CharacterSource.ProviderId,
+                        StringComparison.Ordinal))
+                {
+                    diagnostics.Add(AuthoringDiagnostic.Error(
+                        "ACA-NPC-ARCHETYPE-SOURCE-PROVIDER",
+                        "Non-humanoid archetype and character source must use the same provider.",
+                        profile.ProfileId));
+                }
+                if (!profile.PreferBundledAnimations)
+                {
+                    diagnostics.Add(AuthoringDiagnostic.Error(
+                        "ACA-NPC-ARCHETYPE-BUNDLED-ANIMATION",
+                        "Non-humanoid archetypes must prefer their source provider's bundled animations.",
+                        profile.ProfileId));
+                }
+                if (profile.AllowCrossPackAnimationFallback)
+                {
+                    diagnostics.Add(AuthoringDiagnostic.Error(
+                        "ACA-NPC-ARCHETYPE-CROSS-PACK-FORBIDDEN",
+                        "Non-humanoid cross-pack animation fallback is disabled unless a future explicit rig-compatibility policy is added.",
+                        profile.ProfileId));
+                }
+            }
             var roles = new HashSet<string>(StringComparer.Ordinal);
             foreach (var role in definition.AnimationRequirements ??
                 new List<NpcAnimationRoleRequirement>())
@@ -499,7 +527,8 @@ namespace BlackMountains.AICharacterAuthoring
                         contact?.ContactId));
                 }
             }
-            if (profile.AllowCrossPackAnimationFallback)
+            if (humanoid &&
+                profile.AllowCrossPackAnimationFallback)
             {
                 diagnostics.Add(AuthoringDiagnostic.Warning(
                     "ACA-NPC-ARCHETYPE-CROSS-PACK-ANIMATION",

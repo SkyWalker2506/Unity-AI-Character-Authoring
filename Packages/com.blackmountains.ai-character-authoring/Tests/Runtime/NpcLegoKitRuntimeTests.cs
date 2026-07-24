@@ -247,6 +247,8 @@ namespace BlackMountains.AICharacterAuthoring.Tests
             definition.ArchetypeProfile =
                 NpcEcosystemSampleCatalog.Deer();
             definition.CharacterSource.RequireHumanoidAvatar = false;
+            definition.CharacterSource.ProviderId =
+                definition.ArchetypeProfile.SourceProviderId;
             definition.Navigation.AgentLogicalId =
                 "nwb.nav-agent.quadruped";
             definition.AnimationRequirements.Clear();
@@ -280,6 +282,77 @@ namespace BlackMountains.AICharacterAuthoring.Tests
             Assert.That(HasCode(
                 diagnostics,
                 "ACA-NPC-ARCHETYPE-NAVIGATION"), Is.True);
+        }
+
+        [Test]
+        public void WildlifeFactory_LocksSpeciesToBundledProviderAnimations()
+        {
+            var source = new NpcSpeciesSourceDescriptor
+            {
+                ProviderId =
+                    "provider.nwb.species.animal-pack-deluxe",
+                SourceLogicalId =
+                    "nwb.species-source.wolf",
+                SpeciesId = "species.wolf",
+                Archetype =
+                    NpcArchetypeClass.Quadruped,
+                DisplayName = "Wolf",
+                ModelLogicalId = "nwb.visual.wolf",
+                RigLogicalId = "rig.quadruped.wolf",
+                AvatarLogicalId = "avatar.wolf",
+                BundledAnimationCompatible = true,
+                BundledAnimationRoleIds =
+                    new List<string>
+                    {
+                        "npc.animation.wolf.idle",
+                        "npc.animation.wolf.walk",
+                        "npc.animation.wolf.attack"
+                    }
+            };
+
+            var definition =
+                NpcSampleRecipeCatalog.CreateWildlife(
+                    source,
+                    NpcEcologicalDisposition.Predator);
+            var diagnostics = new DiagnosticList();
+            NpcArchetypeEcosystemValidator.Validate(
+                definition,
+                diagnostics);
+
+            Assert.That(
+                diagnostics.HasErrors,
+                Is.False,
+                Diagnostics(diagnostics));
+            Assert.That(
+                definition.Role,
+                Is.EqualTo(NpcRole.Wildlife));
+            Assert.That(
+                definition.ArchetypeProfile
+                    .PreferBundledAnimations,
+                Is.True);
+            Assert.That(
+                definition.ArchetypeProfile
+                    .AllowCrossPackAnimationFallback,
+                Is.False);
+            Assert.That(
+                definition.CharacterSource.ProviderId,
+                Is.EqualTo(source.ProviderId));
+            Assert.That(
+                definition.AnimationRequirements,
+                Has.All.Property("RoleId")
+                    .StartsWith("npc.animation.wolf."));
+
+            definition.ArchetypeProfile
+                .AllowCrossPackAnimationFallback = true;
+            diagnostics = new DiagnosticList();
+            NpcArchetypeEcosystemValidator.Validate(
+                definition,
+                diagnostics);
+            Assert.That(
+                HasCode(
+                    diagnostics,
+                    "ACA-NPC-ARCHETYPE-CROSS-PACK-FORBIDDEN"),
+                Is.True);
         }
 
         [Test]

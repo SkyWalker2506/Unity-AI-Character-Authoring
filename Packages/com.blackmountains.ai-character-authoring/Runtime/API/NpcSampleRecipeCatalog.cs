@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace BlackMountains.AICharacterAuthoring
@@ -132,6 +133,196 @@ namespace BlackMountains.AICharacterAuthoring
             return definition;
         }
 
+        public static NpcDefinition CreateWildlife(
+            NpcSpeciesSourceDescriptor source,
+            NpcEcologicalDisposition disposition =
+                NpcEcologicalDisposition.Neutral)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (!source.BundledAnimationCompatible)
+                throw new ArgumentException(
+                    "Wildlife source must provide a validated bundled animation set.",
+                    nameof(source));
+
+            string speciesSuffix = source.SpeciesId;
+            int separator = speciesSuffix == null
+                ? -1
+                : speciesSuffix.LastIndexOf('.');
+            if (separator >= 0 &&
+                separator + 1 < speciesSuffix.Length)
+            {
+                speciesSuffix =
+                    speciesSuffix.Substring(separator + 1);
+            }
+            var definition = new NpcDefinition
+            {
+                StableId = "npc.wildlife." + speciesSuffix,
+                Role = NpcRole.Wildlife,
+                DisplayNameLocalizationKey =
+                    "npc.name.wildlife." + speciesSuffix,
+                EnglishDisplayNameFallback = source.DisplayName,
+                Archetype = source.Archetype
+                    .ToString().ToLowerInvariant(),
+                FactionId = disposition ==
+                    NpcEcologicalDisposition.Predator
+                        ? "faction.wildlife.predator"
+                        : "faction.wildlife",
+                BehaviorRecipeId = "npc.behavior.wildlife",
+                ArchetypeProfile =
+                    new NpcArchetypeProfileRecord
+                    {
+                        ProfileId =
+                            "npc.archetype." +
+                            source.Archetype
+                                .ToString()
+                                .ToLowerInvariant() +
+                            "." + speciesSuffix,
+                        Archetype = source.Archetype,
+                        SpeciesId = source.SpeciesId,
+                        RigLogicalId = source.RigLogicalId,
+                        AvatarLogicalId =
+                            source.AvatarLogicalId,
+                        NavigationAgentLogicalId =
+                            "nwb.nav-agent." +
+                            source.Archetype
+                                .ToString()
+                                .ToLowerInvariant(),
+                        LocomotionFamilyId =
+                            "npc.locomotion." +
+                            source.Archetype
+                                .ToString()
+                                .ToLowerInvariant() +
+                            ".ground",
+                        SensorOriginLogicalId =
+                            "npc.sensor-origin.body",
+                        SensorHeight = 0.9m,
+                        ColliderRadius = 0.45m,
+                        ColliderHeight = 1.2m,
+                        BoundsWidth = 1m,
+                        BoundsHeight = 1.2m,
+                        BoundsLength = 1.8m,
+                        SourceProviderId =
+                            source.ProviderId,
+                        PreferBundledAnimations = true,
+                        AllowCrossPackAnimationFallback =
+                            false,
+                        RequiredAnimationRoleIds =
+                            new List<string>(
+                                source
+                                    .BundledAnimationRoleIds)
+                    },
+                CharacterSource =
+                    new NpcCharacterSourceSelection
+                    {
+                        ProviderId = source.ProviderId,
+                        SourceLogicalId =
+                            source.SourceLogicalId,
+                        ModelLogicalId =
+                            source.ModelLogicalId,
+                        AvatarLogicalId =
+                            source.AvatarLogicalId,
+                        RequiredAnimationTags =
+                            new List<string>(
+                                source
+                                    .BundledAnimationRoleIds),
+                        RequireHumanoidAvatar = false,
+                        RequireEquipmentCompatibility =
+                            false
+                    },
+                Appearance =
+                    new NpcAppearanceLoadoutRecord
+                    {
+                        DefaultCharacterSourceLogicalId =
+                            source.SourceLogicalId
+                    },
+                Visual = new NpcVisualReference
+                {
+                    ModelLogicalId =
+                        source.ModelLogicalId,
+                    RigProfileId =
+                        source.RigLogicalId,
+                    AnimationCatalogLogicalId =
+                        "bundled:" +
+                        source.SourceLogicalId
+                },
+                Navigation = new NpcNavigationSelection
+                {
+                    AgentLogicalId =
+                        "nwb.nav-agent." +
+                        source.Archetype
+                            .ToString()
+                            .ToLowerInvariant()
+                },
+                Ecosystem = new NpcEcosystemProfileRecord
+                {
+                    Habitat = new NpcHabitatRecord
+                    {
+                        HabitatId =
+                            "npc.habitat." +
+                            speciesSuffix,
+                        NavigationAgentLogicalId =
+                            "nwb.nav-agent." +
+                            source.Archetype
+                                .ToString()
+                                .ToLowerInvariant(),
+                        TerritoryRadius = 12m
+                    }
+                }
+            };
+            AddCapability(
+                definition,
+                NpcCapabilityIds.Identity);
+            AddCapability(
+                definition,
+                NpcCapabilityIds.Visual,
+                NpcCapabilityIds.Identity);
+            AddCapability(
+                definition,
+                NpcCapabilityIds.Animator,
+                NpcCapabilityIds.Visual);
+            AddCapability(
+                definition,
+                NpcCapabilityIds.Faction,
+                NpcCapabilityIds.Identity);
+            AddCapability(
+                definition,
+                NpcCapabilityIds.Navigation,
+                NpcCapabilityIds.Identity);
+            AddCapability(
+                definition,
+                NpcCapabilityIds.Idle,
+                NpcCapabilityIds.Animator);
+            AddCapability(
+                definition,
+                NpcCapabilityIds.Wander,
+                NpcCapabilityIds.Navigation);
+            AddCapability(
+                definition,
+                NpcCapabilityIds.SemanticAnimation,
+                NpcCapabilityIds.Animator);
+            foreach (string roleId in
+                source.BundledAnimationRoleIds)
+            {
+                definition.AnimationRequirements.Add(
+                    new NpcAnimationRoleRequirement
+                    {
+                        RoleId = roleId,
+                        MotionId =
+                            "bundled:" +
+                            source.SourceLogicalId +
+                            ":" + roleId,
+                        Required = roleId.EndsWith(
+                            ".idle",
+                            StringComparison.Ordinal) ||
+                            roleId.EndsWith(
+                                ".walk",
+                                StringComparison.Ordinal)
+                    });
+            }
+            return definition;
+        }
+
         public static NpcBehaviorRecipe CreateBehaviorRecipe(
             NpcRole role,
             bool stpWeaponIntegration = false)
@@ -215,6 +406,45 @@ namespace BlackMountains.AICharacterAuthoring
                             "lost-target:search-last-known-return-patrol",
                             "default:patrol"
                         }
+                    };
+                case NpcRole.Wildlife:
+                    return new NpcBehaviorRecipe
+                    {
+                        RecipeId =
+                            "npc.behavior.wildlife",
+                        Role = role,
+                        Strategies =
+                            new List<
+                                NpcStrategySelection>
+                            {
+                                Selection(
+                                    "wander",
+                                    "uniform-radius",
+                                    "radius",
+                                    "8",
+                                    "dwell-min",
+                                    "1",
+                                    "dwell-max",
+                                    "4",
+                                    "seed",
+                                    "4404")
+                            },
+                        PriorityStates =
+                            new List<
+                                NpcPriorityStateRecord>
+                            {
+                                State(
+                                    "npc.state.wildlife.ambient",
+                                    100,
+                                    "npc.condition.always",
+                                    null,
+                                    "npc.strategy.wander.uniform-radius")
+                            },
+                        NormalizedFlow =
+                            new List<string>
+                            {
+                                "default:idle-or-wander"
+                            }
                     };
                 default:
                     return new NpcBehaviorRecipe
