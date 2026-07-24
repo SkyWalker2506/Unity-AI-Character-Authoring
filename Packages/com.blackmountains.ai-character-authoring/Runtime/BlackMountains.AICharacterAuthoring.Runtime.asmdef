@@ -1,0 +1,14 @@
+{
+  "name": "BlackMountains.AICharacterAuthoring.Runtime",
+  "rootNamespace": "BlackMountains.AICharacterAuthoring",
+  "references": [],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": true
+}
