@@ -1,9 +1,9 @@
 {
-  "name": "BlackMountains.AICharacterAuthoring.Runtime.Tests",
-  "rootNamespace": "BlackMountains.AICharacterAuthoring.Tests",
+  "name": "BlackMountains.AuthoringKernel.Editor.Tests",
+  "rootNamespace": "BlackMountains.AuthoringKernel.Tests",
   "references": [
     "BlackMountains.AuthoringKernel",
-    "BlackMountains.AICharacterAuthoring.Runtime",
+    "BlackMountains.AuthoringKernel.Editor",
     "UnityEngine.TestRunner",
     "UnityEditor.TestRunner"
   ],

@@ -1,10 +1,13 @@
 {
-  "name": "BlackMountains.AICharacterAuthoring.Runtime",
-  "rootNamespace": "BlackMountains.AICharacterAuthoring",
+  "name": "BlackMountains.AuthoringKernel.Editor",
+  "rootNamespace": "BlackMountains.AuthoringKernel.Editor",
   "references": [
-    "BlackMountains.AuthoringKernel"
+    "BlackMountains.AuthoringKernel",
+    "Unity.Nuget.Newtonsoft-Json"
   ],
-  "includePlatforms": [],
+  "includePlatforms": [
+    "Editor"
+  ],
   "excludePlatforms": [],
   "allowUnsafeCode": false,
   "overrideReferences": false,

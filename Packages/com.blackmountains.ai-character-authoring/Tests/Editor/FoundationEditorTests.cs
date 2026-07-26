@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using BlackMountains.AICharacterAuthoring.Editor;
 using NUnit.Framework;
+using BlackMountains.AuthoringKernel;
+using BlackMountains.AuthoringKernel.Editor;
 
 namespace BlackMountains.AICharacterAuthoring.Editor.Tests
 {
@@ -166,7 +168,7 @@ namespace BlackMountains.AICharacterAuthoring.Editor.Tests
         [Test]
         public void PlanHashCoversOperationInputsAndApprovalSemantics()
         {
-            var plan = new GenerationPlan { PlanId = "plan.hash", CharacterSpecId = "char.hash" };
+            var plan = new GenerationPlan { PlanId = "plan.hash", SubjectSpecId = "char.hash" };
             var operation = new GenerationOperation
             {
                 OperationId = "op.hash",
@@ -216,7 +218,7 @@ namespace BlackMountains.AICharacterAuthoring.Editor.Tests
             string project = Path.GetFullPath(Path.Combine(Path.GetTempPath(), "aca-apply-project-" + Guid.NewGuid().ToString("N")));
             string external = Path.GetFullPath(Path.Combine(Path.GetTempPath(), "aca-apply-external-" + Guid.NewGuid().ToString("N")));
             var policy = new AuthoringExternalPathPolicy(AuthoringProjectIdentity.Create(project), external);
-            var plan = new GenerationPlan { PlanId = "plan.test", CharacterSpecId = "char.test" };
+            var plan = new GenerationPlan { PlanId = "plan.test", SubjectSpecId = "char.test" };
             plan.Operations.Add(new GenerationOperation
             {
                 OperationId = "op.test",
@@ -244,7 +246,7 @@ namespace BlackMountains.AICharacterAuthoring.Editor.Tests
             string project = Path.GetFullPath(Path.Combine(Path.GetTempPath(), "aca-approval-project-" + Guid.NewGuid().ToString("N")));
             string external = Path.GetFullPath(Path.Combine(Path.GetTempPath(), "aca-approval-external-" + Guid.NewGuid().ToString("N")));
             var policy = new AuthoringExternalPathPolicy(AuthoringProjectIdentity.Create(project), external);
-            var plan = new GenerationPlan { PlanId = "plan.nonreversible", CharacterSpecId = "char.nonreversible" };
+            var plan = new GenerationPlan { PlanId = "plan.nonreversible", SubjectSpecId = "char.nonreversible" };
             plan.Operations.Add(new GenerationOperation
             {
                 OperationId = "op.nonreversible",

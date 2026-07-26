@@ -4,6 +4,8 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEditor;
+using BlackMountains.AuthoringKernel;
+using BlackMountains.AuthoringKernel.Editor;
 
 namespace BlackMountains.AICharacterAuthoring.Editor.Transport
 {

@@ -2,6 +2,8 @@
   "name": "BlackMountains.AICharacterAuthoring.Editor",
   "rootNamespace": "BlackMountains.AICharacterAuthoring.Editor",
   "references": [
+    "BlackMountains.AuthoringKernel",
+    "BlackMountains.AuthoringKernel.Editor",
     "BlackMountains.AICharacterAuthoring.Runtime",
     "Unity.Nuget.Newtonsoft-Json"
   ],

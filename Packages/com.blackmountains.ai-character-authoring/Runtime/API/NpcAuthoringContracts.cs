@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BlackMountains.AuthoringKernel;
 
 namespace BlackMountains.AICharacterAuthoring
 {

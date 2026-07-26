@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace BlackMountains.AICharacterAuthoring
+namespace BlackMountains.AuthoringKernel
 {
     public enum OperationSecurityLevel
     {
@@ -36,13 +36,13 @@ namespace BlackMountains.AICharacterAuthoring
         ValidationPrep = 100
     }
 
-    public sealed class GenerationPlan
+    public sealed partial class GenerationPlan
     {
         public const string CurrentSchemaVersion = "1";
 
         public string SchemaVersion { get; set; } = CurrentSchemaVersion;
         public string PlanId { get; set; }
-        public string CharacterSpecId { get; set; }
+        public string SubjectSpecId { get; set; }
         public PlanSource Source { get; set; } = new PlanSource();
         public List<GenerationOperation> Operations { get; set; } = new List<GenerationOperation>();
         public Dictionary<string, string> Metadata { get; set; } = new Dictionary<string, string>(System.StringComparer.Ordinal);

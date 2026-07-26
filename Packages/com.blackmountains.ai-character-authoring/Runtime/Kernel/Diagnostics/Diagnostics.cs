@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BlackMountains.AICharacterAuthoring
+namespace BlackMountains.AuthoringKernel
 {
     public enum DiagnosticSeverity
     {

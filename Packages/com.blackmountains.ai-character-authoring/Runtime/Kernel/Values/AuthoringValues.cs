@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 
-namespace BlackMountains.AICharacterAuthoring
+namespace BlackMountains.AuthoringKernel
 {
     public enum AuthoringValueState
     {

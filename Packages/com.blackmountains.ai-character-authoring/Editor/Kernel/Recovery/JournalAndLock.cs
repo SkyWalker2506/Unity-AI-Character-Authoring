@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace BlackMountains.AICharacterAuthoring.Editor
+namespace BlackMountains.AuthoringKernel.Editor
 {
     public sealed class ExecutionJournal
     {

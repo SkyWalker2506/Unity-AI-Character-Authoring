@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using BlackMountains.AuthoringKernel;
+using BlackMountains.AuthoringKernel.Editor;
 
 namespace BlackMountains.AICharacterAuthoring.Editor.Transport
 {

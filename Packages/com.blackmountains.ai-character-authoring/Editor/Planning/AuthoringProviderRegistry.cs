@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using BlackMountains.AuthoringKernel;
+using BlackMountains.AuthoringKernel.Editor;
 
 namespace BlackMountains.AICharacterAuthoring.Editor
 {

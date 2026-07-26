@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using BlackMountains.AuthoringKernel;
 
 namespace BlackMountains.AICharacterAuthoring.Tests
 {

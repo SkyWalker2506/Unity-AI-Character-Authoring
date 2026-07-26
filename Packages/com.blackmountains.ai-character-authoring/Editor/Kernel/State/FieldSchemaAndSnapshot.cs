@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace BlackMountains.AICharacterAuthoring.Editor
+namespace BlackMountains.AuthoringKernel.Editor
 {
     public enum OwnershipPolicy
     {

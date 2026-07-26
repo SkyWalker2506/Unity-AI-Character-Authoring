@@ -1,3 +1,5 @@
+using BlackMountains.AuthoringKernel;
+using BlackMountains.AuthoringKernel.Editor;
 namespace BlackMountains.AICharacterAuthoring.Editor
 {
     public sealed class IntelligencePolicyResolution

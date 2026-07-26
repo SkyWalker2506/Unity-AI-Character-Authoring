@@ -1,6 +1,6 @@
 using System;
 
-namespace BlackMountains.AICharacterAuthoring.Editor
+namespace BlackMountains.AuthoringKernel.Editor
 {
     public interface IPlanApplicationService
     {
@@ -102,7 +102,7 @@ namespace BlackMountains.AICharacterAuthoring.Editor
                     var journal = new ExecutionJournal
                     {
                         ExecutionId = result.ExecutionId,
-                        ManifestId = plan.CharacterSpecId ?? "unknown-character",
+                        ManifestId = plan.SubjectSpecId ?? "unknown-subject",
                         WriterId = Environment.MachineName + ":" + System.Diagnostics.Process.GetCurrentProcess().Id,
                         ProcessId = System.Diagnostics.Process.GetCurrentProcess().Id,
                         ProcessStartTimeUtc = GetProcessStartTimeUtc(),

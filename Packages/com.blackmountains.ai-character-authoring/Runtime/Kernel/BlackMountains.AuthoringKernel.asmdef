@@ -1,9 +1,7 @@
 {
-  "name": "BlackMountains.AICharacterAuthoring.Runtime",
-  "rootNamespace": "BlackMountains.AICharacterAuthoring",
-  "references": [
-    "BlackMountains.AuthoringKernel"
-  ],
+  "name": "BlackMountains.AuthoringKernel",
+  "rootNamespace": "BlackMountains.AuthoringKernel",
+  "references": [],
   "includePlatforms": [],
   "excludePlatforms": [],
   "allowUnsafeCode": false,

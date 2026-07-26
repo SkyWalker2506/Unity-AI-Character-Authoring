@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace BlackMountains.AICharacterAuthoring
+namespace BlackMountains.AuthoringKernel
 {
     /// <summary>
     /// Shared validation for stable framework identifiers. Identifiers are logical data, not asset paths.
@@ -24,16 +24,16 @@ namespace BlackMountains.AICharacterAuthoring
         }
     }
 
-    public readonly struct CharacterId : IEquatable<CharacterId>, IComparable<CharacterId>
+    public readonly struct SubjectId : IEquatable<SubjectId>, IComparable<SubjectId>
     {
-        public CharacterId(string value) => Value = AuthoringIdentifier.Require(value, nameof(value));
+        public SubjectId(string value) => Value = AuthoringIdentifier.Require(value, nameof(value));
         public string Value { get; }
-        public bool Equals(CharacterId other) => string.Equals(Value, other.Value, StringComparison.Ordinal);
-        public override bool Equals(object obj) => obj is CharacterId other && Equals(other);
+        public bool Equals(SubjectId other) => string.Equals(Value, other.Value, StringComparison.Ordinal);
+        public override bool Equals(object obj) => obj is SubjectId other && Equals(other);
         public override int GetHashCode() => StringComparer.Ordinal.GetHashCode(Value ?? string.Empty);
-        public int CompareTo(CharacterId other) => string.CompareOrdinal(Value, other.Value);
+        public int CompareTo(SubjectId other) => string.CompareOrdinal(Value, other.Value);
         public override string ToString() => Value ?? string.Empty;
-        public static implicit operator string(CharacterId id) => id.Value;
+        public static implicit operator string(SubjectId id) => id.Value;
     }
 
     public readonly struct ProviderId : IEquatable<ProviderId>, IComparable<ProviderId>

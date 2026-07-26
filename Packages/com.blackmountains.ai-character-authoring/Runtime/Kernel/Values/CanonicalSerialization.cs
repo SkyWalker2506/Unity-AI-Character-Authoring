@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace BlackMountains.AICharacterAuthoring
+namespace BlackMountains.AuthoringKernel
 {
     public static class CanonicalSerialization
     {

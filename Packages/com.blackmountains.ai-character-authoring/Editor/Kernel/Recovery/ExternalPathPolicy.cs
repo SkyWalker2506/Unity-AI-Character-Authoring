@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace BlackMountains.AICharacterAuthoring.Editor
+namespace BlackMountains.AuthoringKernel.Editor
 {
     public sealed class AuthoringProjectIdentity
     {
@@ -39,7 +39,7 @@ namespace BlackMountains.AICharacterAuthoring.Editor
         {
             ProjectIdentity = projectIdentity ?? throw new ArgumentNullException(nameof(projectIdentity));
             ExternalRoot = string.IsNullOrWhiteSpace(externalRoot)
-                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "BlackMountains", "AICharacterAuthoring")
+                ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "BlackMountains", "AuthoringKernel")
                 : Path.GetFullPath(externalRoot);
             if (IsInside(ExternalRoot, ProjectIdentity.ProjectRoot))
                 throw new ArgumentException("External authoring root must not be inside the Unity project.", nameof(externalRoot));

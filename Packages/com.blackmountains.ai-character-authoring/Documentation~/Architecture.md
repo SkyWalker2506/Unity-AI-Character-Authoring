@@ -1,6 +1,18 @@
 # Architecture
 
-The package is split into runtime contracts and Editor-only implementation.
+The package is split into runtime contracts and Editor-only implementation, and — since WP-06 —
+each of those halves is split again into a domain-neutral **authoring kernel** and the character domain:
+
+| Assembly | Folder | Contains |
+| --- | --- | --- |
+| `BlackMountains.AuthoringKernel` | `Runtime/Kernel/` | value states, canonical serialization, diagnostics, identifiers, plan/operation types, plan digest |
+| `BlackMountains.AuthoringKernel.Editor` | `Editor/Kernel/` | execution boundary, approval, lock/journal/recovery, snapshots, ownership, three-way merge, manifest DTOs |
+| `BlackMountains.AICharacterAuthoring.Runtime` | `Runtime/` | `CharacterSpec`, `Npc*`, narrative/provider/capability contracts |
+| `BlackMountains.AICharacterAuthoring.Editor` | `Editor/` | provider registry, plan compiler, CLI, Synaptic facade |
+
+The kernel assemblies reference no character type and no Unity engine assembly; both rules are enforced
+by `Tests/Kernel/Editor/KernelBoundaryTests.cs`. They move to a `bm-authoring-kernel` package at WP-52.
+See `docs/AI/ARCHITECTURE.md` and `docs/AI/CONTRACTS.md` in the repository root.
 
 Runtime contains portable data:
 

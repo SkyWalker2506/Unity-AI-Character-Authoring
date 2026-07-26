@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BlackMountains.AICharacterAuthoring.Editor
+namespace BlackMountains.AuthoringKernel.Editor
 {
     public enum MergeAction
     {

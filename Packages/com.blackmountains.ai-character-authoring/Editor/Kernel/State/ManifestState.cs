@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BlackMountains.AICharacterAuthoring.Editor
+namespace BlackMountains.AuthoringKernel.Editor
 {
     public enum ValidationLifecycleState
     {
@@ -28,14 +28,14 @@ namespace BlackMountains.AICharacterAuthoring.Editor
         public string SourceProviderSchemaVersion { get; set; }
     }
 
-    public sealed class GenerationManifest
+    public sealed partial class GenerationManifest
     {
         public const string CurrentSchemaVersion = "1";
 
         public string SchemaVersion { get; set; } = CurrentSchemaVersion;
         public string ManifestId { get; set; }
-        public string CharacterSpecId { get; set; }
-        public string CharacterSpecHash { get; set; }
+        public string SubjectSpecId { get; set; }
+        public string SubjectSpecHash { get; set; }
         public string GenerationPlanHash { get; set; }
         public string GeneratorVersion { get; set; } = "0.1.0";
         public List<GeneratedAssetRecord> GeneratedAssets { get; set; } = new List<GeneratedAssetRecord>();
