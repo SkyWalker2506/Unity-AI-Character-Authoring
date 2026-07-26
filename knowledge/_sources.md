@@ -2,15 +2,21 @@
 
 Her knowledge maddesi buradaki bir `sourceId`'ye dayanır. Kaynaksız madde kabul edilmez.
 
-Bu pakette **tek kaynak** var ve o da `measured` sınıfında. Bunun sebebi ACA'nın bir dış zanaat
-kaynağı taklit etmiyor olması: burada biriken bilgi, bu paketin kendi kodu üzerinde koşulmuş
-ölçümlerdir. Kaynak hiyerarşisinde (`measured` > `docs`/`paper` > `talk`/`practice`) en yüksek
-sınıf bu — ama aynı zamanda **en dar** sınıf: bir ölçüm yalnız ölçüldüğü konfigürasyon için
-konuşur. Her maddenin "Sınırlar" bölümü bu darlığı yazmakla yükümlüdür.
+Bu pakette **iki kaynak** var, farklı sınıflardan ve farklı işler için.
 
-**Çelişki kaydı:** bugün bu pakette çelişki yok, çünkü tek kaynak var. İleride bir `docs` ya da
-`talk` kaynağı eklenir ve bir ölçümle çelişirse, madde dosyası ikisini de yazar ve **ölçüm
-kazanır**.
+`bm-measured` — bu paketin kendi kodu üzerinde koşulmuş ölçümler. Hiyerarşide (`measured` >
+`docs`/`paper` > `talk`/`practice`) en yüksek sınıf, ama aynı zamanda **en dar**: bir ölçüm
+yalnız ölçüldüğü konfigürasyon için konuşur. Her maddenin "Sınırlar" bölümü bu darlığı yazmakla
+yükümlüdür.
+
+`unity-enemies-2022-p3` — dijital insan üretimi üzerine bir stüdyo anlatımı. `talk` sınıfı,
+yani ölçümden düşük. Bu kaynaktan alınan maddeler bize bir **çözüm** değil bir **teşhis**
+veriyor; reçetesi (4D volumetrik yakalama, özel tarama stüdyoları) kapsamımızın dışında ve
+alınmadı.
+
+**Çelişki kaydı:** bugün çelişki yok. İki kaynak farklı alanlarda konuşuyor — `bm-measured`
+serileştirme ve bağlanma hakkında, `unity-enemies-2022-p3` algı ve kompozisyon hakkında.
+Çakışırlarsa **ölçüm kazanır** ve madde dosyası ikisini de yazar.
 
 ---
 
@@ -71,3 +77,49 @@ Bunlar "henüz yapılmadı" değil, **"bu paket bu iddiayı taşımıyor"** anla
 | Özel `JsonSerializerSettings` altında round-trip | Tüm M1–M5 varsayılan ayarlarla. `TypeNameHandling` veya `NullValueHandling` değişirse tablo geçersizdir. |
 | `NpcDefinition`'ın Unity YAML'ına yazılması | Böyle bir yol yok (M8). Bir gün olursa M7–M12 yeniden ölçülmelidir. |
 | `m_EditorClassIdentifier` bozulunca ne olduğu | M11 alanın **opsiyonel** olduğunu gösteriyor; *kasten bozulmuş* bir değerin davranışı denenmedi. |
+
+---
+
+## `unity-enemies-2022-p3`
+
+| | |
+|---|---|
+| **sourceId** | `unity-enemies-2022-p3` |
+| **kind** | `talk` |
+| **title** | Unity Demo Team — "Enemies" yapım serisi, Bölüm 3: gerçekçi insan karakterler |
+| **retrievedAt** | 2026-07-27 (kullanıcı tarafından transkript olarak sağlandı) |
+| **reliability** | orta |
+
+### Neden orta, ve neden yine de alındı
+
+Bu bir stüdyo anlatımı: tek bir yapım, tek bir tür (gerçekçi, oturan, konuşan tek karakter),
+kontrollü bir çalışma değil. Anlatılan etkilerin **yönü** güvenilir, **büyüklüğü** ölçülmemiş.
+Bu yüzden bu kaynaktan gelen dört maddenin ikisi `medium`, ikisi `high` — `high` olanlar bir
+algı iddiası değil, bir **yapısal** iddia taşıdığı için (enterpolasyon ara değerleri yazılmaz;
+ayrı süreçler dikiş üretir).
+
+Alınma sebebi: bu paketin geri kalanı serileştirme ve bağlanma hakkında konuşuyor, yani
+**doğruluk**. Bu kaynak **inandırıcılık** hakkında konuşuyor ve o eksen hiç temsil edilmiyordu.
+
+### Ne alındı, ne alınmadı
+
+| Alındı — teşhis | Alınmadı — reçete |
+|---|---|
+| Hareket ayrı bir başarısızlık sınıfıdır; statik ölçüm görmez | 4D volumetrik video yakalama |
+| Enterpolasyon ara değerleri yazılmamış ve doğrulanmamıştır | Facial rig / FACS / wrinkle map üretimi |
+| Ayrı süreçlerden gelen parçalar dikişte başarısız olur | Cilt, göz, saç shader'larının kendisi |
+| Bazı özellikler yalnız bileşik karede var olur | Tarama, topoloji transferi, kumaş ve mocap tedarikçileri |
+
+Reçete kısmı kapsamımız dışında: özel tarama stüdyoları, topoloji transfer araçları ve
+volumetrik yakalama hattı bizim kurmadığımız ve kurmayacağımız şeyler. **Teşhisi almak,
+reçeteyi almadan da değerlidir** — kapılarımızın neyi ölçmediğini bilmek için.
+
+Satıcı ve araç adları bilinçli olarak madde metinlerine taşınmadı: bu repo public ve bir
+tedarikçi listesi burada bir bağımlılık iddiası gibi okunurdu.
+
+### Bu kaynağın bir ölçümü doğruladığı yer
+
+Cilt albedo'sunun **nötr ışıkta** yakalandığı, yani ham renk elde etmek için aydınlatmanın
+dışarıda bırakıldığı anlatılıyor. Bu, `bm-model-forge/knowledge/baked-in-is-lost-control.md`
+maddesinin bağımsız bir teyidi: pişmiş ışık kontrolü geri alınamaz biçimde kaybettirir.
+İki paket aynı sonuca farklı yollardan geldi.
