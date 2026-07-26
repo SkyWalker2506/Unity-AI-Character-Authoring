@@ -122,6 +122,33 @@ namespace BlackMountains.AICharacterAuthoring
         public const string DialogueCancel = "npc.action.dialogue-cancel";
     }
 
+    /// <summary>
+    /// The single authoritative character specification for this package (WP-07).
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Every character-authoring input path must terminate here. <see cref="NpcDefinition"/> is the
+    /// only type allowed to describe *what a character is*; nothing else in the package may claim
+    /// that role. The legacy <c>CharacterSpec</c> is <c>[Obsolete]</c> and retained for pinned
+    /// consumers only — it is not an alternative authority.
+    /// </para>
+    /// <para>
+    /// Authoritative pipeline:
+    /// <c>NpcDefinition</c> → <see cref="NpcDefinitionValidator"/> → <see cref="NpcRecipePlanner"/>
+    /// → <see cref="NpcAuthoringPlan"/> (the domain plan) → <c>NpcExecutionPlanCompiler</c> →
+    /// <c>GenerationPlan</c> (the execution plan). The last arrow does not exist yet; it is WP-08.
+    /// Until it lands, no <see cref="NpcDefinition"/> reaches the kernel apply machine.
+    /// </para>
+    /// <para>
+    /// Editor-side entry point: <c>BlackMountains.AICharacterAuthoring.Editor.NpcAuthoringPlannerFacade</c>.
+    /// </para>
+    /// <para>
+    /// Serialization: measured, not assumed. See
+    /// <c>Tests/Editor/NpcDefinitionAuthorityTests.cs</c> for the Newtonsoft round-trip measurement
+    /// and the recorded field-loss set. Do not add a member whose type cannot survive that test
+    /// without first extending the measurement.
+    /// </para>
+    /// </remarks>
     [Serializable]
     public sealed class NpcDefinition
     {

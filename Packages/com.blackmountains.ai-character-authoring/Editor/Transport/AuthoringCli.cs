@@ -1,3 +1,9 @@
+// WP-07: the CLI's `plan`/`compile` verbs are still wired to the retired CharacterSpec stack.
+// Re-pointing them at NpcDefinition needs the execution-plan compiler, which is WP-08 — so 618 is
+// suppressed file-wide here rather than the call sites being rewritten speculatively. This
+// suppression marks an unfinished migration; it is not an endorsement.
+#pragma warning disable 618
+
 using System;
 using System.Collections.Generic;
 using System.IO;

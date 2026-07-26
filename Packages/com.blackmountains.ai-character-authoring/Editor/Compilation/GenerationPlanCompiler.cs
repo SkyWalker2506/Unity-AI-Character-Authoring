@@ -1,3 +1,9 @@
+// WP-07: this whole file is the retired CharacterSpec planning stack. It stays compilable because
+// Million Dollars Project pins this package by commit. 618 = "member is obsolete": suppressed
+// file-wide so the deprecation warning fires at *consumer* call sites, not inside the deprecated
+// implementation itself.
+#pragma warning disable 618
+
 using System;
 using System.Collections.Generic;
 using BlackMountains.AuthoringKernel;
@@ -13,6 +19,24 @@ namespace BlackMountains.AICharacterAuthoring.Editor
         public int ManagedMutationsAttempted { get; set; }
     }
 
+    /// <summary>
+    /// Retired execution-plan compiler. Superseded in WP-07 by the <see cref="NpcDefinition"/>
+    /// authority; the replacement compiler lands in WP-08.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Structural defect, not a bug to fix here: <see cref="BuildCapabilityOperation"/> emits a
+    /// single synthetic <c>ensureCapability</c> operation per capability, and no code path in this
+    /// package ever assigns <c>GenerationOperation.TargetAssetGuid</c> or <c>TargetObjectId</c>.
+    /// A plan produced by this type therefore names no asset and can never be applied.
+    /// </para>
+    /// <para>
+    /// The authoritative replacement is <see cref="NpcDefinition"/> →
+    /// <c>NpcAuthoringPlannerFacade.CompileDomainPlan</c> → <see cref="NpcAuthoringPlan"/>, whose
+    /// compilation into a real <c>GenerationPlan</c> is WP-08's work.
+    /// </para>
+    /// </remarks>
+    [Obsolete(ObsoleteAuthoringMessages.GenerationPlanCompiler, false)]
     public sealed class GenerationPlanCompiler
     {
         readonly AuthoringProviderRegistry _registry;

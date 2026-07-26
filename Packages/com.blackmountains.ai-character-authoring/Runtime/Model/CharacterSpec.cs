@@ -1,8 +1,21 @@
+using System;
 using System.Collections.Generic;
 using BlackMountains.AuthoringKernel;
 
 namespace BlackMountains.AICharacterAuthoring
 {
+    /// <summary>
+    /// Retired character specification. Superseded by <see cref="NpcDefinition"/> in WP-07.
+    /// </summary>
+    /// <remarks>
+    /// Kept — deliberately not deleted — because Million Dollars Project pins this package by
+    /// commit and still compiles against this type. It carries no authority: the capability list
+    /// here produces one synthetic <c>ensureCapability</c> operation per capability and never a
+    /// real mutation target. Its <c>Parameters</c> channel additionally does not survive a
+    /// Newtonsoft round-trip (<see cref="AuthoringFieldValue"/> has a private constructor and no
+    /// converter), which is the measured reason it cannot be the authoritative input.
+    /// </remarks>
+    [Obsolete(ObsoleteAuthoringMessages.CharacterSpec, false)]
     public sealed class CharacterSpec
     {
         public const string CurrentSchemaVersion = "1";

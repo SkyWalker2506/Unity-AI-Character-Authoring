@@ -1,3 +1,8 @@
+// WP-07: these tests intentionally exercise the retired CharacterSpec/GenerationPlanCompiler stack.
+// They are the regression net that keeps the deprecated code honest while Million Dollars Project
+// stays pinned to it, so the deprecation warning is suppressed here on purpose.
+#pragma warning disable 618
+
 using System;
 using System.Collections.Generic;
 using System.IO;

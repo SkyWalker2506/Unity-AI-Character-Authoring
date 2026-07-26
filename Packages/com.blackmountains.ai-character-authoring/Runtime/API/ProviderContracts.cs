@@ -58,6 +58,16 @@ namespace BlackMountains.AICharacterAuthoring
         }
     }
 
+    /// <summary>
+    /// Planning context handed to a capability provider by the retired <c>CharacterSpec</c> stack.
+    /// </summary>
+    /// <remarks>
+    /// WP-07: this type is reachable only from the deprecated stack — nothing in the
+    /// <see cref="NpcDefinition"/> path constructs it. It is not itself marked obsolete because it
+    /// is part of the third-party provider extension surface; it will be re-shaped around the
+    /// authoritative model in WP-08 rather than deleted here.
+    /// </remarks>
+#pragma warning disable 618
     public sealed class CapabilityPlanningContext
     {
         readonly List<GenerationOperation> _operations = new List<GenerationOperation>();
@@ -77,4 +87,5 @@ namespace BlackMountains.AICharacterAuthoring
             if (operation != null) _operations.Add(operation);
         }
     }
+#pragma warning restore 618
 }

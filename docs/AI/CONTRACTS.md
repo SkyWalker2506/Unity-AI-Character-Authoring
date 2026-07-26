@@ -58,6 +58,36 @@ Köprüler `*/Kernel/Compat/ObsoleteNameBridges.cs` içindedir.
 > için bir JSON persistence katmanı yazıldığında (WP-10) köprüler **açıkça hariç tutulmalıdır**;
 > aksi halde aynı değer iki anahtarla yazılır. Bugün bu tiplerin hiçbiri serileştirilmiyor.
 
+## 3b. Karakter otoritesi — `NpcDefinition` (WP-07)
+
+`NpcDefinition` bu paketteki **tek** yetkili karakter tanımıdır. Bir karakterin *ne olduğunu*
+tarif etme yetkisi başka hiçbir tipte yoktur.
+
+| Emekli | Durum | Yerine |
+|---|---|---|
+| `CharacterSpec` | `[Obsolete]`, **uyarı** (`IsError = false`) | `NpcDefinition` |
+| `GenerationPlanCompiler` | `[Obsolete]`, **uyarı** | `NpcAuthoringPlannerFacade` (domain planı) + WP-08 (execution planı) |
+
+**Tüketici için ne değişti:** hiçbir şey kırılmadı — uyarı çıkar, derleme geçer. MDP bu paketi
+commit ile pinlediği için ikisi de **silinmedi**. Uyarı mesajları hem yerine geçen tipi hem eksik
+parçanın hangi WP'de geldiğini adıyla söyler (`Runtime/Model/ObsoleteAuthoringMessages.cs`).
+
+**Yetkili hat:**
+`NpcDefinition → NpcDefinitionValidator → NpcRecipePlanner → NpcAuthoringPlan → (WP-08)
+NpcExecutionPlanCompiler → GenerationPlan`. Son ok **henüz yok**; bugün hiçbir modelden gerçek bir
+mutation'a giden desteklenen yol yoktur. `CharacterSpec`'e göç etmek bunu çözmez.
+
+Editor giriş noktası: `BlackMountains.AICharacterAuthoring.Editor.NpcAuthoringPlannerFacade` —
+saf iletim, mantık içermez.
+
+> **Serileştirme — ölçüldü, varsayılmadı.** `NpcDefinition` ve `NpcAuthoringPlan` düz Newtonsoft
+> round-trip'ini **kayıpsız** geçer (plan `DeterministicHash`'i dahil). `AuthoringFieldValue`
+> **geçmez**: private ctor + get-only property yüzünden `State=Known` sessizce `Unspecified`'a döner,
+> istisna atılmaz. `CharacterSpec.Parameters` bu tipi taşıdığı için persist edilemez —
+> otoritenin `NpcDefinition` olmasının ölçülmüş gerekçesi budur. Converter WP-20'de gelir;
+> `Tests/Editor/NpcDefinitionAuthorityTests.cs`'deki iki ölçüm testi o gün **ters çevrilmeli,
+> silinmemelidir**.
+
 ## 4. Plan digest'i — Kararlı (wire contract)
 
 `GenerationPlanHasher.Hash` anahtar grameri sözleşmedir. `CharacterSpecId → SubjectSpecId` yeniden
