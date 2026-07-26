@@ -2,8 +2,34 @@
 
 > **Bu dosya her iş paketi tesliminde güncellenir.** Güncel değilse teslim eksiktir.
 
-**Son güncelleme:** 2026-07-26 (WP-07 `NpcDefinition` tek otorite)
+**Son güncelleme:** 2026-07-27 (WP-KNOWLEDGE knowledge katmanı)
 **Faz:** Gate 1 öncesi — kernel ACA'nın içinde, kendi asmdef'iyle. Governed mutation hattı **hâlâ kapalı**.
+
+## Zorunlu okuma sırası — işe başlamadan önce
+
+ADR-002 §4 (`bm-contracts/docs/AI/ADR-002-knowledge-layer.md`) bu repoda da geçerlidir. Her ajan,
+kod değiştirmeden önce şu sırayı izler:
+
+| # | Dosya | Cevapladığı soru |
+|---|---|---|
+| 1 | **bu dosya** (`docs/AI/STATE.md`) | Neyin bitmiş, neyin **kasıtlı eksik** olduğu |
+| 2 | `knowledge/_index.md` | Bu göreve hangi zanaat maddeleri uygun |
+| 3 | seçilen `knowledge/*.md` | Ölçülmüş gerçeğin kendisi |
+| 4 | — | işi yap |
+| 5 | teslim raporu | `knowledgePackId` + `knowledgePackDigest` + `citedTopics[]` yaz |
+
+Sıra önemli. `STATE.md` önce gelir çünkü "Kasıtlı eksikler" listesini okumayan ajan, bilinçli
+olarak boş bırakılmış bir yeri "tamamlar" ve bir mimari kararı sessizce bozar.
+
+**Tümünü okuma.** `knowledge/_index.md` bir görev→madde eşlemesi tutar; yalnız kendi görevine ait
+olanları oku. Bu bir performans önlemi değil **doğruluk önlemi**: ilgisiz bir madde kararı
+iyileştirmez, bulandırır.
+
+`citedTopics: []` geçerlidir — her karar bir maddeye dayanmak zorunda değil. `knowledgePackId: null`
+da yasak değil (acil düzeltme, mekanik görev), ama raporda **"bilgisiz karar"** olarak durur.
+
+**Knowledge normatif değildir.** Hard gate'ler koddadır (asmdef sınırları, koruma testleri,
+kanonik digest) ve **kod kazanır**. Bir madde ile kod çelişirse kod doğrudur ve madde güncellenir.
 
 ## Tamamlananlar
 
@@ -12,6 +38,7 @@
 | (önceki) | Paket çekirdeği: değer modeli, kanonik serileştirme, merge motoru, plan compiler, approval/journal/lock primitifleri, read-only CLI | `b0b66f7` |
 | **WP-06** | **İki kernel asmdef'i** + kimlik nötrleştirme + kernel sınırının test ile zorlanması | Aşağıdaki koşum kanıtı |
 | **WP-07** | **Tek otorite `NpcDefinition`** + eski yığın `[Obsolete]` + R2 riskinin **ölçülmesi** | Aşağıdaki koşum kanıtı |
+| **WP-KNOWLEDGE** | `knowledge/` paketi (5 madde, tamamı `bm-measured`) + `SerializeReference` sıfır yüzeyinin teste bağlanması | Aşağıdaki koşum kanıtı |
 
 ### WP-06 ne yaptı
 
@@ -171,6 +198,73 @@ implementasyonu (`GenerationPlanCompiler.cs`), henüz göç etmemiş CLI verb'le
 eski tipi taşımak *işi olan* payload'lar (`SpecGenerationResult`, `CapabilityPlanningContext`) ve
 eski yığını kasten koşan testler. Susturmalar **tüketici çağrı yerlerini kapsamaz** — MDP göç
 etmeye başladığında uyarıyı görecek.
+
+### WP-KNOWLEDGE ne yaptı
+
+1. **`knowledge/` paketi açıldı** (`bm.ai-character-authoring/knowledge` 0.1.0) — 5 madde, hepsi
+   `bm-measured` kaynaklı. Dış zanaat kaynağı yok: her madde bu repo veya `bm-fixture` üzerinde
+   koşulmuş bir ölçüme dayanıyor. Ölçüm tablosu ve ortam bilgisi `knowledge/_sources.md`'de
+   (M1–M17), görev→madde eşlemesi `knowledge/_index.md`'de.
+2. **Okuma protokolü bu dosyaya girdi** (yukarıdaki "Zorunlu okuma sırası"), ADR-002 §4 uyarınca.
+3. **En değerli madde koda bağlandı.** `unity-binds-by-guid-not-assembly-name`, "asmdef taşırsak
+   serileştirilmiş veri kırılır" korkusunun bu repo için **yanlış** olduğunu ölçüyor — ve sınırını
+   da veriyor: bağışıklık `SerializeReference`'ın sıfır olmasından geliyor, Unity'nin bir
+   lütfundan değil. Sınır artık `Tests/Editor/SerializedSurfaceTests.cs` ile mekanik olarak
+   tutuluyor.
+
+Kilitlenen ölçümler: `SerializeReference` **0**, `SerializeField`/`MonoBehaviour`/`ScriptableObject`
+**0/0/0**, dört üretim assembly'sinin üçü `noEngineReferences: true`. Bağlanma mekanizması da
+ölçüldü: `m_Script` **`.cs.meta` GUID**'ine bağlanıyor (assembly adı zincirde yok),
+`m_EditorClassIdentifier` **opsiyonel** (fixture PackageCache'inde 1335 boş / 170 dolu; *aynı*
+GUID hem boş hem dolu hâlde yükleniyor), `SerializeReference` ise `RefIds[].type.asm` ile
+**literal assembly adına** bağlanıyor.
+
+### WP-KNOWLEDGE koşum kanıtı (2026-07-27, gerçekten koşuldu)
+
+```
+/Applications/Unity/Hub/Editor/6000.4.3f1/Unity.app/Contents/MacOS/Unity \
+  -batchmode -runTests -testPlatform EditMode \
+  -projectPath ~/Projects/bm-fixture -testResults /tmp/wpk.xml -logFile -
+```
+
+| Koşum | Sonuç |
+|---|---|
+| Baseline (değişiklik öncesi, aynı makine, aynı oturum) | exit 0 · **190 test / 190 geçti / 0 kaldı** |
+| WP-KNOWLEDGE sonrası | exit 0 · **204 test / 204 geçti / 0 kaldı / 0 atlandı** · `error CS` = 0 · sızan `warning CS0618` = 0 |
+
+| Assembly | Baseline | Sonra |
+|---|---:|---:|
+| `BlackMountains.AICharacterAuthoring.Editor.Tests` | 34 | **46 (+12)** |
+| `BlackMountains.AICharacterAuthoring.Runtime.Tests` | 26 | 26 |
+| `BlackMountains.AuthoringKernel.Editor.Tests` | 13 | 13 |
+| **ACA payı** | **73** | **85 (+12)** |
+| `AnimationLibrary.Editor.Tests` | 41 | **43 (+2, ACA'ya ait değil)** |
+| `AnimationLibrary.Runtime.Tests` + fixture | 76 | 76 |
+
+**Regresyon yok:** mevcut 190 testin hiçbiri değişmedi. ACA artışı **tam olarak** 12 — yeni
+`SerializedSurfaceTests`'in üç testi × dört üretim assembly'si.
+
+> **+2 bana ait değil.** `AnimationLibrary.Editor.Tests` 41 → 43, iki koşum arasında komşu paketin
+> deposuna **paralel bir oturumun** commit'i düştüğü için arttı
+> (`HumanoidClip_ScaleWithoutARigIdentity_RefusesToProduceMillimetres`,
+> `HumanoidSpace_IsDetectedEvenThoughHasMotionCurvesIsFalse`). Kırılım yazılmasaydı bu iş paketi
+> kendi +12'sini +14 diye raporlardı. Gerekçe:
+> `knowledge/baseline-is-measured-not-remembered`.
+
+### Yeni koruma testi gerçekten koruyor mu — negatif kontrol koşuldu
+
+`Editor/Planning/` altına geçici bir sonda kondu: `ScriptableObject` türeten, `[SerializeReference]`
+alan taşıyan bir tip.
+
+| Koşum | Sonuç |
+|---|---|
+| İhlal enjekte edilmiş | exit **2** · 204 test / 202 geçti / **2 kaldı** |
+| Kalan testler | `ProductionAssembly_DeclaresNoSerializeReferenceField("BlackMountains.AICharacterAuthoring.Editor")` · `ProductionAssembly_DefinesNoUnityObjectDerivedType("BlackMountains.AICharacterAuthoring.Editor")` |
+| Diğer üç assembly | **yeşil kaldı** — `noEngineReferences: true` oldukları için ihlal oralarda yazılamıyor bile |
+| Sonda silindikten sonra | exit 0 · **204 / 204** |
+
+Dikkat: yalnız `…AICharacterAuthoring.Editor` kırmızıya döndü. Bu bir eksiklik değil, ölçümün
+kendisi — tek gerçek risk yüzeyi o assembly, çünkü engine'i görebilen tek üretim assembly'si o.
 
 ## Bilinen sınırlar / bilinçli kararlar
 
