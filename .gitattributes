@@ -1,0 +1,35 @@
+# Kanonik satir sonu: hem depoda hem calisma agacinda LF.
+#
+# Bu paketin kernel'i kanonik JSON + SHA-256 uzerine kurulu
+# (Runtime/Kernel/Values/, GenerationPlanHashing.cs). Kaynak dosyalarin satir sonu
+# checkout'a birakilirsa iki host ayni agactan farkli calisma agaci uretir.
+# "text=auto" tek basina checkout'ta NATIVE satir sonu verir (Windows'ta CRLF);
+# belirleyici olan "eol=lf" kismidir.
+#
+# Kardes paket Unity-Animation-Library ayni kurali .cs/.json/.md/.asmdef icin
+# zaten pinliyor; burada agacin tamamina uygulaniyor.
+* text=auto eol=lf
+
+*.cs      text eol=lf
+*.json    text eol=lf
+*.md      text eol=lf
+*.asmdef  text eol=lf
+*.asmref  text eol=lf
+*.uxml    text eol=lf
+*.uss     text eol=lf
+*.meta    text eol=lf
+*.asset   text eol=lf
+*.prefab  text eol=lf
+
+# Ikili varliklar — donusturulmez
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.tga  binary
+*.exr  binary
+*.wav  binary
+*.ogg  binary
+*.fbx  binary
+*.blend binary
+*.glb  binary
+*.dll  binary
