@@ -31,6 +31,7 @@ kaynağın çözümü (volumetrik yakalama hattı) kapsamımız dışında.
 | WP-08 execution-plan compiler'ı yazmak | `authority-lives-where-serialization-is-lossless` — **önce bunu oku** |
 | WP-20 `AuthoringFieldValue` converter'ı | `silent-loss-is-worse-than-a-throw` — testler silinmez, ters çevrilir |
 | Plan/manifest'i diske yazmak (WP-10) | `authority-lives-where-serialization-is-lossless` · `silent-loss-is-worse-than-a-throw` |
+| **Sahneye/varlığa bileşen kurmak, iki süreç arasında veri taşımak** | `setup-is-not-persistence` — **önce bunu oku** |
 | asmdef taşımak, namespace değiştirmek, WP-52 kernel çıkarımı | `unity-binds-by-guid-not-assembly-name` — **önce bunu oku** |
 | Bir tipi Unity'de serileştirmeyi düşünmek | `unity-binds-by-guid-not-assembly-name` |
 | Ölçüm ya da koruma testi yazmak | `a-comparer-that-walks-nothing-finds-nothing` · `interpolated-inbetweens-are-unauthored` |
@@ -47,6 +48,7 @@ kaynağın çözümü (volumetrik yakalama hattı) kapsamımız dışında.
 |---|---|---|---|---|
 | `authority-lives-where-serialization-is-lossless` | Otorite, serileştirmeyi kayıpsız geçen temsilde durur | `NpcDefinition`, `NpcAuthoringPlan`, WP-08, plan store | yüksek | — |
 | `silent-loss-is-worse-than-a-throw` | Sessiz kayıp istisnadan tehlikelidir, kapsamı ölçülür | `AuthoringFieldValue`, `CharacterSpec`, WP-20, merge | yüksek | — |
+| `setup-is-not-persistence` | Bellekte doğru olan diske geçmeyebilir; kalıcılık doğrulanır | SceneAuthoring, AssetAuthoring, CaptureHandoff | yüksek (**ölçüldü**) | — |
 | `unity-binds-by-guid-not-assembly-name` | GUID'e bağlanır, assembly adına değil — istisnası `SerializeReference` | asmdef taşıma, WP-52, `CONTRACTS.md` | yüksek | **evet** |
 | `a-comparer-that-walks-nothing-finds-nothing` | Ölçüm aleti de ölçülür | round-trip ölçümleri, koruma testleri | yüksek | — |
 | `baseline-is-measured-not-remembered` | Baseline hatırlanmaz, yeniden ölçülür | teslim kanıtı, `STATE.md`, CI | yüksek | — |
